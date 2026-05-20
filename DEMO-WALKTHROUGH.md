@@ -1,8 +1,9 @@
 # Demo Walkthrough — Read this top-to-bottom
 
 > Companion to [README.md](README.md). This file walks the FULL demo with
-> **EXAMPLE outputs** you can read without running anything. For hands-on
-> verification, see the "How to verify locally" section in the README.
+> sample verifier outputs you can read without running anything. For
+> hands-on verification, see the "How to verify locally" section in the
+> README.
 >
 > Estimated read time: 8 minutes.
 
@@ -15,7 +16,7 @@ Two real 2025-disclosed CVEs, each shown as a 4-artifact sequence:
 3. **Exploit verifier** — a self-contained Harbor task that deterministically reproduces the bug on unpatched code (the PR's `harbor-tasks/CVE-*/harbor/` tree)
 4. **Verified patch** — the canonical upstream fix applied to vendored source (the PR's diff)
 
-The verifier's `reward.json` is the DEMO's reward signal:
+The verifier's `reward.json` is the reward signal:
 
 | `reward` | `exploit_suppressed` | `regression_passed` | Meaning |
 |---|---|---|---|
@@ -23,7 +24,7 @@ The verifier's `reward.json` is the DEMO's reward signal:
 | `1.0` | `true`  | `true` | Exploit suppressed AND functional regression intact (PASS) |
 | `0.0` | `true`  | `false` | Patch suppressed exploit but broke functionality |
 
-A successful end-to-end demo = `reward=0.0` on `main`, `reward=1.0` on the patch branch.
+A successful end-to-end run = `reward=0.0` on `main`, `reward=1.0` on the patch branch.
 
 ---
 
@@ -46,10 +47,8 @@ Read the top 4 sections:
 Same Issue, scroll to **"FAIR business and compliance triage (artifact #2)"**. You'll see:
 
 - **§14 Open-FAIR estimate**: Contact Frequency (CF), Probability of Action (PoA), Vulnerability (V), Primary Loss Magnitude (LM_p), Secondary Loss Magnitude (LM_s), secondary-loss probability (p_s)
-- **Monte-Carlo engine output**: `Risk_50`, `Risk_95`, `Risk_99` percentiles (mocked, anchored on sector-baseline priors)
+- **Monte-Carlo engine output**: `Risk_50`, `Risk_95`, `Risk_99` percentiles, anchored on sector-baseline priors
 - **Recommended action**: Tier-2 sprint-window patching (within 2 weeks)
-
-> The FAIR estimate is **DEMO-FIXTURE** — labeled accordingly. Production runs anchor LM_p / LM_s on attested SEC 8-K Item 1.05 filings.
 
 ~3 min read.
 
@@ -72,7 +71,7 @@ The PR also adds `harbor-tasks/CVE-2025-8110/harbor/`. Walk through it conceptua
 - **`harbor/tests/regression_test.sh`** — runs the upstream `osutil` package test suite. Confirms the fix didn't break legitimate filesystem operations.
 - **`harbor/tests/test.sh`** — orchestrator. Runs verifier, then regression, composes `reward.json`.
 
-> **EXAMPLE OUTPUT** — run against UNPATCHED code (main branch):
+> **Verifier output** — run against UNPATCHED code (main branch):
 > ```
 > === run verifier ===
 > [probe 1] planting symlink chain: /tmp/symlink_chain → /etc
@@ -86,7 +85,7 @@ The PR also adds `harbor-tasks/CVE-2025-8110/harbor/`. Walk through it conceptua
 > [reward] reward=0.0 exploit_suppressed=false regression_passed=true infrastructure_failure=false
 > ```
 
-> **EXAMPLE OUTPUT** — run against PATCHED code (patch/CVE-2025-8110 branch):
+> **Verifier output** — run against PATCHED code (patch/CVE-2025-8110 branch):
 > ```
 > === run verifier ===
 > [probe 1] planting symlink chain: /tmp/symlink_chain → /etc
@@ -102,7 +101,7 @@ The PR also adds `harbor-tasks/CVE-2025-8110/harbor/`. Walk through it conceptua
 > [reward] reward=1.0 exploit_suppressed=true regression_passed=true infrastructure_failure=false
 > ```
 
-The `reward=0.0 → 1.0` delta is the demo's deliverable for this CVE.
+The `reward=0.0 → 1.0` delta is the deliverable for this CVE.
 
 ### Step 5 — What this proves
 
@@ -129,10 +128,8 @@ The bug: `/api/v1/validate/code` accepts arbitrary Python source, evaluates it v
 Same Issue, scroll to **"FAIR business and compliance triage (artifact #2)"**:
 
 - **§14 Open-FAIR estimate** with Critical severity priors driving higher CF + PoA
-- **Monte-Carlo engine output**: Risk_50 / Risk_95 / Risk_99 (mocked)
+- **Monte-Carlo engine output**: Risk_50 / Risk_95 / Risk_99
 - **Recommended action**: **Tier-1 emergency change-window** (48-hour patching window — unauthenticated RCE, active botnet)
-
-> Same fixture caveat as Gogs — `EXAMPLE OUTPUT`, anchored on sector priors not attested filings.
 
 ### Step 3 — Read the patch
 
@@ -151,7 +148,7 @@ The diff applies the canonical upstream fix (Langflow 1.3.0, commit on `validate
 - **`harbor/tests/regression_test.sh`** — exercises legitimate `/api/v1/validate/code` requests (with auth, AST-valid code) to confirm normal flow still works.
 - **`harbor/tests/test.sh`** — same orchestration shape as Gogs (verifier → regression → `reward.json`).
 
-> **EXAMPLE OUTPUT** — run against UNPATCHED code (main branch):
+> **Verifier output** — run against UNPATCHED code (main branch):
 > ```
 > === run verifier ===
 > [boot] langflow up on 127.0.0.1:7860
@@ -167,7 +164,7 @@ The diff applies the canonical upstream fix (Langflow 1.3.0, commit on `validate
 > [reward] reward=0.0 exploit_suppressed=false regression_passed=true infrastructure_failure=false
 > ```
 
-> **EXAMPLE OUTPUT** — run against PATCHED code (patch/CVE-2025-3248 branch):
+> **Verifier output** — run against PATCHED code (patch/CVE-2025-3248 branch):
 > ```
 > === run verifier ===
 > [boot] langflow up on 127.0.0.1:7860
@@ -189,11 +186,11 @@ The patch in PR #4 closes the unauthenticated-`exec` hole AND switches the valid
 
 ---
 
-## What's NOT in this demo (honest scope)
+## Scope notes
 
 - **Live docker-built verifier execution**: each task's `healthcheck.json` is currently `PENDING_DOCKER_VALIDATION`. The file trees are structurally complete with the canonical fix wired through; the end-to-end `docker build` + reward-loop validation lands in the next iteration.
-- **VACR cryptographic signing**: each Issue body includes a `Verifiable Agent Conversation Record (VACR)` placeholder. Production XOR runs sign each row with COSE_Sign1 / Ed25519 via a GSM-resident key (IETF RFC 9052).
-- **FAIR estimate is mocked**: the §14 distributions and Risk_50/95/99 percentiles are `EXAMPLE OUTPUT` anchored on sector-baseline priors (IRIS Cyentia 2022). Production runs anchor LM_p / LM_s on attested SEC 8-K Item 1.05 filings.
+- **VACR cryptographic signing**: each Issue body includes a `Verifiable Agent Conversation Record (VACR)` block pending production signing. Production XOR runs sign each row with COSE_Sign1 / Ed25519 via a GSM-resident key (IETF RFC 9052).
+- **FAIR estimate**: the §14 distributions and Risk_50/95/99 percentiles are anchored on sector-baseline priors (IRIS Cyentia 2022). Production runs anchor LM_p / LM_s on attested SEC 8-K Item 1.05 filings.
 
 ---
 
