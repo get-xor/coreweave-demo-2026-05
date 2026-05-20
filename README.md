@@ -1,5 +1,9 @@
 # CoreWeave Demo — Verified Vulnerability Journey (May 2026)
 
+> **TL;DR for execs**: see [DEMO-WALKTHROUGH.md](DEMO-WALKTHROUGH.md) —
+> 8-min top-to-bottom read of the full demo with EXAMPLE outputs, no
+> execution required.
+
 This repository demonstrates an end-to-end **verified vulnerability
 journey** for two real-world, publicly disclosed remote code execution
 flaws — walking each CVE through **four customer-facing artifacts**.
