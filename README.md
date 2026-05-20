@@ -1,8 +1,8 @@
 # CoreWeave Demo — Verified Vulnerability Journey (May 2026)
 
 > **TL;DR for execs**: see [DEMO-WALKTHROUGH.md](DEMO-WALKTHROUGH.md) —
-> 8-min top-to-bottom read of the full demo with EXAMPLE outputs, no
-> execution required.
+> 8-min top-to-bottom read of the full demo with sample verifier
+> outputs, no execution required.
 
 This repository demonstrates an end-to-end **verified vulnerability
 journey** for two real-world, publicly disclosed remote code execution
@@ -76,13 +76,13 @@ Conversation Record (VACR)** signed via COSE_Sign1 / Ed25519
 payload identifies the persona, model, raw-artifact content hashes, and
 reviewer panel verdicts that produced each row.
 
-## Demo status
+## Status
 
-This is a **demonstration**. `healthcheck.json` in each harbor task is
-currently labelled `PENDING_DOCKER_VALIDATION` — the verifier file
-trees are structurally complete, with the canonical upstream fix wired
-through, but the end-to-end `docker build` + reward-loop validation
-has not been executed against these specific scaffolds. The
+`healthcheck.json` in each harbor task is currently labelled
+`PENDING_DOCKER_VALIDATION` — the verifier file trees are structurally
+complete, with the canonical upstream fix wired through, but the
+end-to-end `docker build` + reward-loop validation has not yet been
+executed against these specific scaffolds. The
 `operator_validation_steps` block in each healthcheck spells out the
 exact commands a recipient runs to close the gate. Production wiring
 of the live verifier and verified-patch loop lands in the next
