@@ -10,9 +10,9 @@ flaws — walking each CVE through **four customer-facing artifacts**.
 | **CVE-2025-3248** | Langflow < 1.3.0 | Unauthenticated Python `exec` RCE | Critical (CVSS 9.8) |
 
 Both CVEs have observed in-the-wild exploitation (Supershell C2 for
-Gogs, Flodrix botnet for Langflow). CVE-2025-3248 is on the CISA KEV
-catalog (added 2025-05-05). Both predate this demo by months — they
-are not theoretical.
+Gogs, Flodrix botnet for Langflow). Both are on the CISA KEV catalog —
+CVE-2025-3248 (added 2025-05-05) and CVE-2025-8110 (added 2026-01-12).
+Both predate this demo by months — they are not theoretical.
 
 ## The 4-artifact deliverable, per CVE
 
